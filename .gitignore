@@ -89,4 +89,7 @@ ENV/
 .ropeproject
 node_modules/
 node_modules/
+.gitignore
+node_modules
+
 bower_components/
