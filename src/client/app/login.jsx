@@ -1,6 +1,71 @@
 import React from 'react';
 import {render} from 'react-dom';
 import ReactDOM from 'react-dom';
+import cookie from 'react-cookie';
+
+var Login = React.createClass({
+    getInitialState: function(){
+        return {
+            username: "",
+            no_of_players: 1
+        };
+    },
+
+    login: function(e){
+        e.preventDefault();
+        $.ajax({
+          url: "http://localhost:8080/login/",
+          withCredentials: true,
+          data: {username: this.state.username, no_of_players: this.state.no_of_players},
+          dataType: 'json',
+          method: 'POST',
+          success: function(output, status, xhr) {
+            console.log(xhr.getAllResponseHeaders())
+            this.props.callback(true, xhr.getResponseHeader('Set-Cookie'));
+          }.bind(this),
+          error: function(xhr, status, err) {
+            console.error(this.props.url, status, err.toString());
+          }.bind(this)
+        });
+    },
+
+
+    setUserName: function(event){
+        this.setState({username: event.target.value});
+    },
+
+    setNoOfPlayers: function(event){
+        this.setState({no_of_players: event.target.value});
+    },
+
+  render: function() {
+    var container = <div className="container">
+            <form className="col s12 well">
+              <br/><br/><br/>
+              <div className="row">
+                <div className="input-field col s4 center center-block offset-s3">
+                  <input id="name" type="text" className="validate" onBlur={this.setUserName}/>
+                  <label htmlFor="name">Player Name</label>
+                </div>
+              </div>
+              <div className="row">
+                <div className="input-field col s4 center offset-s3">
+                  <input id="no of players" type="text" className="validate" onBlur={this.setNoOfPlayers}/>
+                  <label htmlFor="no of players">No. of players</label>
+                </div>
+              </div>
+                <br/><br/>
+              <div className="row">
+                   <button className="btn waves-effect waves-light col s2 center offset-s4" onClick={this.login}>Submit
+                    <i className="material-icons right">send</i>
+                  </button>
+              </div>
+            </form>
+    </div>
+    return container
+  }
+});
+
 
 var CommentBox = React.createClass({
     getInitialState: function(){
@@ -12,6 +77,7 @@ var CommentBox = React.createClass({
     },
 
   render: function() {
+    cookie.save(this.props.cookie);
     var container = <div id="container">
       <div id="board">
         <table>
@@ -146,7 +212,39 @@ var CommentBox = React.createClass({
     return container
   }
 });
+
+var MainComponent =  React.createClass({
+    getInitialState: function(){
+        return (
+            {
+               loggedIn: false,
+               cookie: ''
+            }
+        )
+    },
+
+    setLoggedIn: function(value, cookie_value){
+        this.setState({loggedIn: value, cookie: cookie_value});
+    },
+
+    render : function(){
+//        if(this.state.loggedIn == false){
+            return (
+                <div>
+                    <Login callback={this.setLoggedIn} cookie={this.state.cookie}/>
+                </div>
+            )
+//        }
+//        return (
+//            <div>
+//                <CommentBox/>
+//            </div>
+//        )
+    }
+})
+
+
 ReactDOM.render(
-    <CommentBox/>,
-    document.getElementById('main_board')
+  <MainComponent />,
+  document.getElementById('app')
 );

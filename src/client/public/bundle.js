@@ -43,13 +43,11 @@
 /******/ ([
 /* 0 */
 /*!**********************************!*\
-  !*** ./src/client/app/index.jsx ***!
+  !*** ./src/client/app/login.jsx ***!
   \**********************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _react = __webpack_require__(/*! react */ 1);
 	
@@ -57,47 +55,724 @@
 	
 	var _reactDom = __webpack_require__(/*! react-dom */ 34);
 	
-	var _AwesomeComponent = __webpack_require__(/*! ./AwesomeComponent.jsx */ 172);
+	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _AwesomeComponent2 = _interopRequireDefault(_AwesomeComponent);
+	var _reactCookie = __webpack_require__(/*! react-cookie */ 172);
+	
+	var _reactCookie2 = _interopRequireDefault(_reactCookie);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	var Login = _react2.default.createClass({
+	  displayName: 'Login',
 	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	  getInitialState: function getInitialState() {
+	    return {
+	      username: "",
+	      no_of_players: 1
+	    };
+	  },
 	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	  login: function login(e) {
+	    e.preventDefault();
+	    $.ajax({
+	      url: "http://localhost:8080/login/",
+	      withCredentials: true,
+	      data: { username: this.state.username, no_of_players: this.state.no_of_players },
+	      dataType: 'json',
+	      method: 'POST',
+	      success: function (output, status, xhr) {
+	        console.log(xhr.getAllResponseHeaders());
+	        this.props.callback(true, xhr.getResponseHeader('Set-Cookie'));
+	      }.bind(this),
+	      error: function (xhr, status, err) {
+	        console.error(this.props.url, status, err.toString());
+	      }.bind(this)
+	    });
+	  },
 	
-	var App = function (_React$Component) {
-	  _inherits(App, _React$Component);
+	  setUserName: function setUserName(event) {
+	    this.setState({ username: event.target.value });
+	  },
 	
-	  function App() {
-	    _classCallCheck(this, App);
+	  setNoOfPlayers: function setNoOfPlayers(event) {
+	    this.setState({ no_of_players: event.target.value });
+	  },
 	
-	    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
-	  }
-	
-	  _createClass(App, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
+	  render: function render() {
+	    var container = _react2.default.createElement(
+	      'div',
+	      { className: 'container' },
+	      _react2.default.createElement(
+	        'form',
+	        { className: 'col s12 well' },
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement('br', null),
 	        _react2.default.createElement(
-	          'p',
-	          null,
-	          ' Hello madhuri!'
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'input-field col s4 center center-block offset-s3' },
+	            _react2.default.createElement('input', { id: 'name', type: 'text', className: 'validate', onBlur: this.setUserName }),
+	            _react2.default.createElement(
+	              'label',
+	              { htmlFor: 'name' },
+	              'Player Name'
+	            )
+	          )
 	        ),
-	        _react2.default.createElement(_AwesomeComponent2.default, null)
-	      );
-	    }
-	  }]);
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'input-field col s4 center offset-s3' },
+	            _react2.default.createElement('input', { id: 'no of players', type: 'text', className: 'validate', onBlur: this.setNoOfPlayers }),
+	            _react2.default.createElement(
+	              'label',
+	              { htmlFor: 'no of players' },
+	              'No. of players'
+	            )
+	          )
+	        ),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'button',
+	            { className: 'btn waves-effect waves-light col s2 center offset-s4', onClick: this.login },
+	            'Submit',
+	            _react2.default.createElement(
+	              'i',
+	              { className: 'material-icons right' },
+	              'send'
+	            )
+	          )
+	        )
+	      )
+	    );
+	    return container;
+	  }
+	});
 	
-	  return App;
-	}(_react2.default.Component);
+	var CommentBox = _react2.default.createClass({
+	  displayName: 'CommentBox',
 	
-	(0, _reactDom.render)(_react2.default.createElement(App, null), document.getElementById('app'));
+	  getInitialState: function getInitialState() {
+	    return { number: 0 };
+	  },
+	
+	  rollDice: function rollDice() {
+	    this.setState({ number: Math.round(Math.random() * 6) });
+	  },
+	
+	  render: function render() {
+	    _reactCookie2.default.save(this.props.cookie);
+	    var container = _react2.default.createElement(
+	      'div',
+	      { id: 'container' },
+	      _react2.default.createElement(
+	        'div',
+	        { id: 'board' },
+	        _react2.default.createElement(
+	          'table',
+	          null,
+	          _react2.default.createElement(
+	            'tbody',
+	            null,
+	            _react2.default.createElement(
+	              'tr',
+	              null,
+	              _react2.default.createElement(
+	                'td',
+	                { id: '99' },
+	                '99'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '98', className: 'snake' },
+	                '98'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '97' },
+	                '97'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '96' },
+	                '96'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '95', className: 'ladder' },
+	                '95'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '94' },
+	                '94'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '93' },
+	                '93'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '92', className: 'snake' },
+	                '92'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '91' },
+	                '91'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '90' },
+	                '90'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'tr',
+	              null,
+	              _react2.default.createElement(
+	                'td',
+	                { id: '80', className: 'snake' },
+	                '80'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '81', className: 'ladder' },
+	                '81'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '82' },
+	                '82'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '83' },
+	                '83'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '84', className: 'ladder' },
+	                '84'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '85', className: 'snake' },
+	                '85'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '86' },
+	                '86'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '87', className: 'snake' },
+	                '87'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '88' },
+	                '88'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '89', className: 'ladder' },
+	                '89'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'tr',
+	              null,
+	              _react2.default.createElement(
+	                'td',
+	                { id: '79', className: 'snake_ladder' },
+	                '79'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '78' },
+	                '78'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '77' },
+	                '77'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '76' },
+	                '76'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '75', className: 'snake_ladder' },
+	                '75'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '74' },
+	                '74'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '73' },
+	                '73'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '72', className: 'snake' },
+	                '72'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '71' },
+	                '71'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '70', className: 'ladder' },
+	                '70'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'tr',
+	              null,
+	              _react2.default.createElement(
+	                'td',
+	                { id: '60', className: 'snake' },
+	                '60'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '61' },
+	                '61'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '62' },
+	                '62'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '63', className: 'snake' },
+	                '63'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '64', className: 'ladder' },
+	                '64'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '65' },
+	                '65'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '66' },
+	                '66'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '67', className: 'snake_ladder' },
+	                '67'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '68' },
+	                '68'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '69' },
+	                '69'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'tr',
+	              null,
+	              _react2.default.createElement(
+	                'td',
+	                { id: '59', className: 'snake' },
+	                '59'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '58' },
+	                '58'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '57', className: 'snake' },
+	                '57'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '56' },
+	                '56'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '55', className: 'ladder' },
+	                '55'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '54' },
+	                '54'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '53', className: 'snake' },
+	                '53'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '52' },
+	                '52'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '51', className: 'ladder' },
+	                '51'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '50' },
+	                '50'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'tr',
+	              null,
+	              _react2.default.createElement(
+	                'td',
+	                { id: '40', className: 'snake' },
+	                '40'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '41', className: 'ladder' },
+	                '41'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '42' },
+	                '42'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '43' },
+	                '43'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '44', className: 'ladder' },
+	                '44'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '45', className: 'snake' },
+	                '45'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '46' },
+	                '46'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '47' },
+	                '47'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '48' },
+	                '48'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '49', className: 'ladder' },
+	                '49'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'tr',
+	              null,
+	              _react2.default.createElement(
+	                'td',
+	                { id: '39', className: 'snake' },
+	                '39'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '38', className: 'ladder' },
+	                '38'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '37', className: 'snake' },
+	                '37'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '36' },
+	                '36'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '35', className: 'snake' },
+	                '35'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '34' },
+	                '34'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '33' },
+	                '33'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '32' },
+	                '32'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '31', className: 'snake' },
+	                '31'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '30' },
+	                '30'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'tr',
+	              null,
+	              _react2.default.createElement(
+	                'td',
+	                { id: '20', className: 'snake' },
+	                '20'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '21' },
+	                '21'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '22', className: 'snake_ladder' },
+	                '22'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '23' },
+	                '23'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '24' },
+	                '24'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '25', className: 'ladder' },
+	                '25'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '26' },
+	                '26'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '27', className: 'snake' },
+	                '27'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '28' },
+	                '28'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '29', className: 'ladder' },
+	                '29'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'tr',
+	              null,
+	              _react2.default.createElement(
+	                'td',
+	                { id: '19', className: 'snake' },
+	                '19'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '18' },
+	                '18'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '17', className: 'snake' },
+	                '17'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '16' },
+	                '16'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '15' },
+	                '15'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '14', className: 'snake_ladder' },
+	                '14'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '13', className: 'snake' },
+	                '13'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '12' },
+	                '12'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '11' },
+	                '11'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '10', className: 'ladder' },
+	                '10'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'tr',
+	              null,
+	              _react2.default.createElement(
+	                'td',
+	                { id: '0' },
+	                '0'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '1' },
+	                '1'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '2' },
+	                '2'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '3' },
+	                '3'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '4' },
+	                '4'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '5', className: 'ladder' },
+	                '5'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '6' },
+	                '6'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '7' },
+	                '7'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '8' },
+	                '8'
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { id: '9' },
+	                '9'
+	              )
+	            )
+	          )
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { id: 'dice', onClick: this.rollDice },
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          this.state.number
+	        )
+	      )
+	    );
+	
+	    return container;
+	  }
+	});
+	
+	var MainComponent = _react2.default.createClass({
+	  displayName: 'MainComponent',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      loggedIn: false,
+	      cookie: ''
+	    };
+	  },
+	
+	  setLoggedIn: function setLoggedIn(value, cookie_value) {
+	    this.setState({ loggedIn: value, cookie: cookie_value });
+	  },
+	
+	  render: function render() {
+	    //        if(this.state.loggedIn == false){
+	    return _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(Login, { callback: this.setLoggedIn, cookie: this.state.cookie })
+	    );
+	    //        }
+	    //        return (
+	    //            <div>
+	    //                <CommentBox/>
+	    //            </div>
+	    //        )
+	  }
+	});
+	
+	_reactDom2.default.render(_react2.default.createElement(MainComponent, null), document.getElementById('app'));
 
 /***/ },
 /* 1 */
@@ -21965,79 +22640,324 @@
 
 /***/ },
 /* 172 */
-/*!*********************************************!*\
-  !*** ./src/client/app/AwesomeComponent.jsx ***!
-  \*********************************************/
+/*!*********************************!*\
+  !*** ./~/react-cookie/index.js ***!
+  \*********************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	var cookie = __webpack_require__(/*! cookie */ 173);
 	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	if (typeof Object.assign != 'function') {
+	  Object.assign = function(target) {
+	    'use strict';
+	    if (target == null) {
+	      throw new TypeError('Cannot convert undefined or null to object');
+	    }
 	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	    target = Object(target);
+	    for (var index = 1; index < arguments.length; index++) {
+	      var source = arguments[index];
+	      if (source != null) {
+	        for (var key in source) {
+	          if (Object.prototype.hasOwnProperty.call(source, key)) {
+	            target[key] = source[key];
+	          }
+	        }
+	      }
+	    }
+	    return target;
+	  };
+	}
 	
-	var _react = __webpack_require__(/*! react */ 1);
+	var _rawCookie = {};
+	var _res = undefined;
 	
-	var _react2 = _interopRequireDefault(_react);
+	function _isResWritable() {
+	  if(!_res)
+	    return false
+	  if(_res.headersSent === true)
+	    return false
+	  return true
+	}
 	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	function load(name, doNotParse) {
+	  var cookies = (typeof document === 'undefined') ? _rawCookie : cookie.parse(document.cookie);
+	  var cookieVal = cookies && cookies[name];
 	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var AwesomeComponent = function (_React$Component) {
-	  _inherits(AwesomeComponent, _React$Component);
-	
-	  function AwesomeComponent(props) {
-	    _classCallCheck(this, AwesomeComponent);
-	
-	    var _this = _possibleConstructorReturn(this, (AwesomeComponent.__proto__ || Object.getPrototypeOf(AwesomeComponent)).call(this, props));
-	
-	    _this.state = { likesCount: 0 };
-	    _this.onLike = _this.onLike.bind(_this);
-	    return _this;
+	  if (!doNotParse) {
+	    try {
+	      cookieVal = JSON.parse(cookieVal);
+	    } catch(e) {
+	      // Not serialized object
+	    }
 	  }
 	
-	  _createClass(AwesomeComponent, [{
-	    key: 'onLike',
-	    value: function onLike() {
-	      var newLikesCount = this.state.likesCount + 1;
-	      this.setState({ likesCount: newLikesCount });
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        'Likes : ',
-	        _react2.default.createElement(
-	          'span',
-	          null,
-	          this.state.likesCount
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          null,
-	          _react2.default.createElement(
-	            'button',
-	            { onClick: this.onLike },
-	            'Like Me'
-	          )
-	        )
-	      );
-	    }
-	  }]);
+	  return cookieVal;
+	}
 	
-	  return AwesomeComponent;
-	}(_react2.default.Component);
+	function select(regex) {
+	  var cookies = (typeof document === 'undefined') ? _rawCookie : cookie.parse(document.cookie);
+	  if(!cookies)
+	    return {}
+	  if(!regex)
+	    return cookies
+	  return Object.keys(cookies)
+	    .reduce(function(accumulator, name) {
+	      if(!regex.test(name))
+	        return accumulator
+	      var newCookie = {}
+	      newCookie[name] = cookies[name]
+	      return Object.assign({}, accumulator, newCookie)
+	    }, {})
+	}
 	
-	exports.default = AwesomeComponent;
+	function save(name, val, opt) {
+	  _rawCookie[name] = val;
+	
+	  // allow you to work with cookies as objects.
+	  if (typeof val === 'object') {
+	    _rawCookie[name] = JSON.stringify(val);
+	  }
+	
+	  // Cookies only work in the browser
+	  if (typeof document !== 'undefined') {
+	    document.cookie = cookie.serialize(name, _rawCookie[name], opt);
+	  }
+	
+	  if (_isResWritable() && _res.cookie) {
+	    _res.cookie(name, val, opt);
+	  }
+	}
+	
+	function remove(name, opt) {
+	  delete _rawCookie[name];
+	
+	  if (typeof opt === 'undefined') {
+	    opt = {};
+	  } else if (typeof opt === 'string') {
+	    // Will be deprecated in future versions
+	    opt = { path: opt };
+	  } else {
+	    // Prevent mutation of opt below
+	    opt = Object.assign({}, opt);
+	  }
+	
+	  if (typeof document !== 'undefined') {
+	    opt.expires = new Date(1970, 1, 1, 0, 0, 1);
+	    document.cookie = cookie.serialize(name, '', opt);
+	  }
+	
+	  if (_isResWritable() && _res.clearCookie) {
+	    _res.clearCookie(name, opt);
+	  }
+	}
+	
+	function setRawCookie(rawCookie) {
+	  if (rawCookie) {
+	    _rawCookie = cookie.parse(rawCookie);
+	  } else {
+	    _rawCookie = {};
+	  }
+	}
+	
+	function plugToRequest(req, res) {
+	  if (req.cookie) {
+	    _rawCookie = req.cookie;
+	  } else if (req.cookies) {
+	    _rawCookie = req.cookies;
+	  } else if (req.headers && req.headers.cookie) {
+	    setRawCookie(req.headers.cookie);
+	  } else {
+	    _rawCookie = {};
+	  }
+	
+	  _res = res;
+	  return function unplug() {
+	    _res = null;
+	    _rawCookie = {};
+	  }
+	}
+	
+	var reactCookie = {
+	  load: load,
+	  select: select,
+	  save: save,
+	  remove: remove,
+	  setRawCookie: setRawCookie,
+	  plugToRequest: plugToRequest
+	};
+	
+	if (typeof window !== 'undefined') {
+	  window['reactCookie'] = reactCookie;
+	}
+	
+	module.exports = reactCookie;
+
+
+/***/ },
+/* 173 */
+/*!******************************************!*\
+  !*** ./~/react-cookie/~/cookie/index.js ***!
+  \******************************************/
+/***/ function(module, exports) {
+
+	/*!
+	 * cookie
+	 * Copyright(c) 2012-2014 Roman Shtylman
+	 * Copyright(c) 2015 Douglas Christopher Wilson
+	 * MIT Licensed
+	 */
+	
+	/**
+	 * Module exports.
+	 * @public
+	 */
+	
+	exports.parse = parse;
+	exports.serialize = serialize;
+	
+	/**
+	 * Module variables.
+	 * @private
+	 */
+	
+	var decode = decodeURIComponent;
+	var encode = encodeURIComponent;
+	
+	/**
+	 * RegExp to match field-content in RFC 7230 sec 3.2
+	 *
+	 * field-content = field-vchar [ 1*( SP / HTAB ) field-vchar ]
+	 * field-vchar   = VCHAR / obs-text
+	 * obs-text      = %x80-FF
+	 */
+	
+	var fieldContentRegExp = /^[\u0009\u0020-\u007e\u0080-\u00ff]+$/;
+	
+	/**
+	 * Parse a cookie header.
+	 *
+	 * Parse the given cookie header string into an object
+	 * The object has the various cookies as keys(names) => values
+	 *
+	 * @param {string} str
+	 * @param {object} [options]
+	 * @return {object}
+	 * @public
+	 */
+	
+	function parse(str, options) {
+	  if (typeof str !== 'string') {
+	    throw new TypeError('argument str must be a string');
+	  }
+	
+	  var obj = {}
+	  var opt = options || {};
+	  var pairs = str.split(/; */);
+	  var dec = opt.decode || decode;
+	
+	  pairs.forEach(function(pair) {
+	    var eq_idx = pair.indexOf('=')
+	
+	    // skip things that don't look like key=value
+	    if (eq_idx < 0) {
+	      return;
+	    }
+	
+	    var key = pair.substr(0, eq_idx).trim()
+	    var val = pair.substr(++eq_idx, pair.length).trim();
+	
+	    // quoted values
+	    if ('"' == val[0]) {
+	      val = val.slice(1, -1);
+	    }
+	
+	    // only assign once
+	    if (undefined == obj[key]) {
+	      obj[key] = tryDecode(val, dec);
+	    }
+	  });
+	
+	  return obj;
+	}
+	
+	/**
+	 * Serialize data into a cookie header.
+	 *
+	 * Serialize the a name value pair into a cookie string suitable for
+	 * http headers. An optional options object specified cookie parameters.
+	 *
+	 * serialize('foo', 'bar', { httpOnly: true })
+	 *   => "foo=bar; httpOnly"
+	 *
+	 * @param {string} name
+	 * @param {string} val
+	 * @param {object} [options]
+	 * @return {string}
+	 * @public
+	 */
+	
+	function serialize(name, val, options) {
+	  var opt = options || {};
+	  var enc = opt.encode || encode;
+	
+	  if (!fieldContentRegExp.test(name)) {
+	    throw new TypeError('argument name is invalid');
+	  }
+	
+	  var value = enc(val);
+	
+	  if (value && !fieldContentRegExp.test(value)) {
+	    throw new TypeError('argument val is invalid');
+	  }
+	
+	  var pairs = [name + '=' + value];
+	
+	  if (null != opt.maxAge) {
+	    var maxAge = opt.maxAge - 0;
+	    if (isNaN(maxAge)) throw new Error('maxAge should be a Number');
+	    pairs.push('Max-Age=' + maxAge);
+	  }
+	
+	  if (opt.domain) {
+	    if (!fieldContentRegExp.test(opt.domain)) {
+	      throw new TypeError('option domain is invalid');
+	    }
+	
+	    pairs.push('Domain=' + opt.domain);
+	  }
+	
+	  if (opt.path) {
+	    if (!fieldContentRegExp.test(opt.path)) {
+	      throw new TypeError('option path is invalid');
+	    }
+	
+	    pairs.push('Path=' + opt.path);
+	  }
+	
+	  if (opt.expires) pairs.push('Expires=' + opt.expires.toUTCString());
+	  if (opt.httpOnly) pairs.push('HttpOnly');
+	  if (opt.secure) pairs.push('Secure');
+	
+	  return pairs.join('; ');
+	}
+	
+	/**
+	 * Try decoding a string using a decoding function.
+	 *
+	 * @param {string} str
+	 * @param {function} decode
+	 * @private
+	 */
+	
+	function tryDecode(str, decode) {
+	  try {
+	    return decode(str);
+	  } catch (e) {
+	    return str;
+	  }
+	}
+
 
 /***/ }
 /******/ ]);

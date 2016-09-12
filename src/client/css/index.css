@@ -1,0 +1,48 @@
+td {
+  border:2px solid black;
+  margin-top:10px;
+  height:90px;
+  width: 90px;
+}
+
+table {
+  width: 70%;
+  margin: auto;
+}
+
+#dice{
+    border:2px solid black;
+    height:90px;
+    width: 80px;
+    margin-right: 10%;
+    line-height: 80px;
+}
+
+span {
+  height:90px;
+  width: 80px;
+  vertical-align: middle;
+  line-height: normal;
+}
+
+#board{
+  flex: 1;
+}
+
+.snake {
+    background-color: #ff8080;
+}
+
+.ladder {
+    background-color: #80ffbf;
+}
+
+.snake_ladder {
+    background-color: #909061;
+}
+
+#container{
+    display: flex;
+    font-size: 200%;
+    text-align: center;
+}
